@@ -1,6 +1,7 @@
 local finders = require('telescope.finders')
 local make_entry = require('telescope._extensions.docker.make_entry')
 local pickers = require('telescope.pickers')
+local previewers = require('telescope._extensions.docker.previewers')
 local utils = require('telescope.utils')
 
 local conf = require('telescope.config').values
@@ -16,7 +17,8 @@ local containers = function(opts)
       results = results,
       entry_maker = opts.entry_maker or make_entry.gen_from_containers(opts),
     },
-    sorter = conf.file_sorter(opts)
+    sorter = conf.file_sorter(opts),
+    previewer = previewers.docker_logs.new(opts),
   }):find()
 end
 
