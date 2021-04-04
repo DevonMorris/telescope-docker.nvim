@@ -27,7 +27,7 @@ function make_entry.gen_from_containers()
       return nil
     end
 
-    local name, image, status, id = string.match(entry, '([^ ]+)%s+([^ ]+)%s+([^ ]+)%s+([^ ]+)')
+    local name, image, status, id = string.match(entry, '"([^ ]+)%s+([^ ]+)%s+([^ ]+)%s+([^ ]+)')
 
     return {
       value = name,
