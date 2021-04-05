@@ -1,3 +1,6 @@
+local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
+local dactions = require('telescope._extensions.docker.actions')
 local finders = require('telescope.finders')
 local make_entry = require('telescope._extensions.docker.make_entry')
 local pickers = require('telescope.pickers')
@@ -19,6 +22,11 @@ local containers = function(opts)
     },
     sorter = conf.file_sorter(opts),
     previewer = previewers.docker_logs.new(opts),
+    attach_mappings = function(prompt_bufnr, map)
+      map('i', '<c-s>', dactions.docker_start_toggle)
+      map('n', '<c-s>', dactions.docker_start_toggle)
+      return true
+    end
   }):find()
 end
 
