@@ -55,4 +55,5 @@ require('telescope').extensions.docker.containers
     * [ ] Add demo
     * [ ] Add customization info
     * [ ] Can I generate vim help pages???
+    * [ ] Need a photoshop of whale on telescope
 * [ ] Docker Compose???
