@@ -34,6 +34,8 @@ local containers = function(opts)
           action_state.get_current_picker(prompt_bufnr):refresh(gen_new_finder(), { reset_prompt = true })
         end,
       }
+      -- Replace enter with nothing for now
+      actions.select_default:replace(function() end)
 
       map('i', '<c-s>', dactions.docker_start_toggle)
       map('n', '<c-s>', dactions.docker_start_toggle)
