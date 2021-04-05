@@ -1,5 +1,5 @@
 local utils = require('telescope.utils')
-local putils = require('telescope.previewers.utils')
+local dutils = require('telescope._extensions.docker.utils')
 local previewers = require('telescope.previewers')
 local defaulter = utils.make_default_callable
 
@@ -12,7 +12,7 @@ docker_previewers.docker_logs = defaulter(function(opts)
     end,
 
     define_preview = function(self, entry, status)
-      putils.job_maker({ 'docker', 'logs', '-n', '1000', entry.name }, self.state.bufnr, {
+      dutils.job_maker({ 'docker', 'logs', '-n', '1000', entry.name }, self.state.bufnr, {
         value = entry.value,
         bufname = self.state.bufname,
         cwd = opts.cwd,
