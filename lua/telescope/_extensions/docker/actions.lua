@@ -1,5 +1,7 @@
 local action_state = require('telescope.actions.state')
 local utils = require('telescope.utils')
+local Job = require('plenary.job')
+local transform_mod = require('telescope.actions.mt').transform_mod
 local dactions = {}
 
 dactions.docker_start_toggle = function(prompt_bufnr)
@@ -13,4 +15,5 @@ dactions.docker_start_toggle = function(prompt_bufnr)
   end
 end
 
+dactions = transform_mod(dactions)
 return dactions

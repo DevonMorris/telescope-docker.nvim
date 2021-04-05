@@ -10,19 +10,31 @@ local utils = require('telescope.utils')
 local conf = require('telescope.config').values
 
 local containers = function(opts)
-  local results = utils.get_os_command_output({
-  'docker', 'ps', '-a',  '--format',  '"{{.Names}}\t{{.Image}}\t{{.State}}\t{{.ID}}"'
-  }, opts.cwd)
+  local gen_new_finder = function()
+    local results = utils.get_os_command_output({
+        'docker', 'ps', '-a',  '--format',  '"{{.Names}}\t{{.Image}}\t{{.State}}\t{{.ID}}"'
+        }, opts.cwd)
+    return finders.new_table {
+      results = results,
+      entry_maker = opts.entry_maker or make_entry.gen_from_containers(opts),
+    }
+  end
+
+  local initial_finder = gen_new_finder()
+  if not initial_finder then return end
 
   pickers.new(opts, {
     prompt_title = 'Docker Containers',
-    finder = finders.new_table {
-      results = results,
-      entry_maker = opts.entry_maker or make_entry.gen_from_containers(opts),
-    },
+    finder = initial_finder,
     sorter = conf.file_sorter(opts),
     previewer = previewers.docker_logs.new(opts),
     attach_mappings = function(prompt_bufnr, map)
+      dactions.docker_start_toggle:enhance {
+        post = function()
+          action_state.get_current_picker(prompt_bufnr):refresh(gen_new_finder(), { reset_prompt = true })
+        end,
+      }
+
       map('i', '<c-s>', dactions.docker_start_toggle)
       map('n', '<c-s>', dactions.docker_start_toggle)
       return true
@@ -40,7 +52,7 @@ return require('telescope').register_extension {
 
   -- requires = ...
   -- mappings = ...
-  -- actions = ...
+  actions = dactions,
   -- commands = ...
 
   exports = {
