@@ -12,10 +12,15 @@ docker_previewers.docker_logs = defaulter(function(opts)
     end,
 
     define_preview = function(self, entry, status)
-      putils.job_maker({ 'docker', 'logs', '-n', 100, entry.name }, self.state.bufnr, {
+      putils.job_maker({ 'docker', 'logs', '-n', '1000', entry.name }, self.state.bufnr, {
         value = entry.value,
         bufname = self.state.bufname,
-        cwd = opts.cwd
+        cwd = opts.cwd,
+        callback = function(bufnr)
+          vim.api.nvim_buf_call(bufnr, function ()
+            vim.cmd'norm G'
+          end)
+        end
       })
     end
   }
