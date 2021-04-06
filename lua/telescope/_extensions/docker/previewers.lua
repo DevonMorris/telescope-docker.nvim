@@ -18,6 +18,9 @@ docker_previewers.docker_logs = defaulter(function(opts)
         cwd = opts.cwd,
         callback = function(bufnr)
           vim.api.nvim_buf_call(bufnr, function ()
+            vim.cmd'silent! %s/\\%x1b\\[[0-9;]*m//g'
+            vim.cmd'silent! %s/\\][0-9;]*//g'
+            vim.cmd'silent! %s/[[:cntrl:]]/g'
             vim.cmd'norm G'
           end)
         end
