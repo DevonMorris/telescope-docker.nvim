@@ -14,8 +14,20 @@ dactions.docker_start_toggle = function(prompt_bufnr)
   else
     cmd = "start"
   end
-  local job = dutils.get_job_from_cmd({ 'docker', cmd, selection.name }, cwd)
-  job:sync()
+
+  local results = {}
+  local docker_job = dutils.get_job_from_cmd({ 'docker', cmd, selection.name }, cwd)
+  local container_job = dutils.get_container_job()
+  container_job:after(vim.schedule_wrap(function(j)
+    results = j:result()
+    local picker = action_state.get_current_picker(prompt_bufnr)
+    if picker == nil then
+      return
+    end
+    picker:refresh(results, { reset_prompt = false })
+  end))
+  docker_job:and_then(container_job)
+  docker_job:start()
 end
 
 dactions.docker_rm = function(prompt_bufnr)
@@ -26,8 +38,6 @@ dactions.docker_rm = function(prompt_bufnr)
     local confirmation = vim.fn.input('Do you really want to remove running container ' .. selection.name .. '? [Y/n] ')
     if confirmation ~= '' and string.lower(confirmation) ~= 'y' then return end
   end
-
-  local results = {}
   local docker_job = dutils.get_job_from_cmd({ 'docker', 'rm', '-f', selection.name }, cwd)
   docker_job:sync()
 end
