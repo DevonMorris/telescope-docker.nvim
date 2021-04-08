@@ -27,15 +27,8 @@ require('telescope').extensions.docker.containers
 ```
 
 ## TODO
-* [ ] Fix actions to not block and update picker
-  * [ ] Is this even possible???
-    * [ ] I tried to make it an `on_exit` in the job by calling a `picker:refresh` -> segfault
-    * [ ] Tried adding another update job `after` and I got some error about not being able to be tied to a callback, but I might have done this wrong, I was tired
-  * [ ] Really a problem for `docker stop`
 * [ ] Containers
-  * [ ] Remove container action
   * [ ] drop to a shell in the container -> `termopen()`
-  * [ ] previewer fix ansi codes
 * [ ] Images
   * [ ] Finder
   * [ ] Entry maker
