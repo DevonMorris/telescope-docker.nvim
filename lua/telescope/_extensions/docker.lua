@@ -10,17 +10,7 @@ local utils = require('telescope.utils')
 local conf = require('telescope.config').values
 
 local containers = function(opts)
-  local gen_new_finder = function()
-    local results = utils.get_os_command_output({
-        'docker', 'ps', '-a',  '--format',  '"{{.Names}}\t{{.Image}}\t{{.State}}\t{{.ID}}"'
-        }, opts.cwd)
-    return finders.new_table {
-      results = results,
-      entry_maker = opts.entry_maker or make_entry.gen_from_containers(opts),
-    }
-  end
-
-  local initial_finder = gen_new_finder()
+  local initial_finder = dutils.gen_container_finder_sync()
   if not initial_finder then return end
 
   pickers.new(opts, {
@@ -31,7 +21,7 @@ local containers = function(opts)
     attach_mappings = function(prompt_bufnr, map)
       dactions.docker_start_toggle:enhance {
         post = function()
-          action_state.get_current_picker(prompt_bufnr):refresh(gen_new_finder(), { reset_prompt = true })
+          action_state.get_current_picker(prompt_bufnr):refresh(dutils.gen_container_finder_sync(), { reset_prompt = true })
         end,
       }
       -- Replace enter with nothing for now

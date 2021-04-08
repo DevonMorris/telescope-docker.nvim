@@ -1,4 +1,6 @@
 local Job = require('plenary.job')
+local finders = require('telescope.finders')
+local make_entry = require('telescope._extensions.docker.make_entry')
 
 dutils = {}
 
@@ -37,6 +39,31 @@ dutils.job_maker = function(cmd, bufnr, opts)
   else
     if opts.callback then opts.callback(bufnr) end
   end
+end
+
+local get_job_from_cmd = function(cmd, cwd)
+  if type(cmd) ~= "table" then
+    print('Telescope Docker: [get_os_command_output]: cmd has to be a table')
+    return {}
+  end
+  local command = table.remove(cmd, 1)
+  return Job:new({ command = command, args = cmd, cwd = cwd})
+end
+dutils.get_job_from_cmd = get_job_from_cmd
+
+local gen_container_finder_from_results = function(results)
+  return finders.new_table {
+    results = results,
+    entry_maker = make_entry.gen_from_containers(),
+  }
+end
+dutils.gen_container_finder_from_results = gen_container_finder_from_results
+
+dutils.gen_container_finder_sync = function()
+  local job = get_job_from_cmd({
+        'docker', 'ps', '-a',  '--format',  '"{{.Names}}\t{{.Image}}\t{{.State}}\t{{.ID}}"'
+      })
+  return gen_container_finder_from_results(job:sync())
 end
 
 return dutils
