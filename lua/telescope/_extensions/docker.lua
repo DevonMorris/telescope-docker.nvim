@@ -17,7 +17,7 @@ local containers = function(opts)
     sorter = conf.file_sorter(opts),
     previewer = previewers.docker_logs.new(opts),
     attach_mappings = function(prompt_bufnr, map)
-      dactions.docker_start_toggle:enhance {
+      dactions.docker_rm:enhance {
         post = function()
           action_state.get_current_picker(prompt_bufnr):refresh(dutils.gen_container_finder_sync(), { reset_prompt = true })
         end,
@@ -27,6 +27,8 @@ local containers = function(opts)
 
       map('i', '<c-s>', dactions.docker_start_toggle)
       map('n', '<c-s>', dactions.docker_start_toggle)
+      map('i', '<c-d>', dactions.docker_rm)
+      map('n', '<c-d>', dactions.docker_rm)
       return true
     end
   }):find()
