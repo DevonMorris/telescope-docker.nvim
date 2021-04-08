@@ -59,10 +59,16 @@ local gen_container_finder_from_results = function(results)
 end
 dutils.gen_container_finder_from_results = gen_container_finder_from_results
 
-dutils.gen_container_finder_sync = function()
+local get_container_job = function()
   local job = get_job_from_cmd({
         'docker', 'ps', '-a',  '--format',  '"{{.Names}}\t{{.Image}}\t{{.State}}\t{{.ID}}"'
       })
+  return job
+end
+dutils.get_container_job = get_container_job
+
+dutils.gen_container_finder_sync = function()
+  local job = get_container_job()
   return gen_container_finder_from_results(job:sync())
 end
 

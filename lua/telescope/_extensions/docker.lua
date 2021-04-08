@@ -1,11 +1,9 @@
 local actions = require('telescope.actions')
 local action_state = require('telescope.actions.state')
 local dactions = require('telescope._extensions.docker.actions')
-local finders = require('telescope.finders')
-local make_entry = require('telescope._extensions.docker.make_entry')
+local dutils = require('telescope._extensions.docker.utils')
 local pickers = require('telescope.pickers')
 local previewers = require('telescope._extensions.docker.previewers')
-local utils = require('telescope.utils')
 
 local conf = require('telescope.config').values
 
