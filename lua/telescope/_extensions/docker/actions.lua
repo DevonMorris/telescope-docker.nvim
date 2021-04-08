@@ -24,7 +24,7 @@ dactions.docker_start_toggle = function(prompt_bufnr)
     if picker == nil then
       return
     end
-    picker:refresh(results, { reset_prompt = false })
+    picker:refresh(dutils.gen_container_finder_from_results(results), { reset_prompt = false })
   end))
   docker_job:and_then(container_job)
   docker_job:start()
@@ -39,7 +39,17 @@ dactions.docker_rm = function(prompt_bufnr)
     if confirmation ~= '' and string.lower(confirmation) ~= 'y' then return end
   end
   local docker_job = dutils.get_job_from_cmd({ 'docker', 'rm', '-f', selection.name }, cwd)
-  docker_job:sync()
+  local container_job = dutils.get_container_job()
+  container_job:after(vim.schedule_wrap(function(j)
+    results = j:result()
+    local picker = action_state.get_current_picker(prompt_bufnr)
+    if picker == nil then
+      return
+    end
+    picker:refresh(dutils.gen_container_finder_from_results(results), { reset_prompt = false })
+  end))
+  docker_job:and_then(container_job)
+  docker_job:start()
 end
 
 dactions = transform_mod(dactions)
