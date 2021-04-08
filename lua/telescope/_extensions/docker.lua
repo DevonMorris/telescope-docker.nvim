@@ -22,11 +22,18 @@ local containers = function(opts)
           action_state.get_current_picker(prompt_bufnr):refresh(dutils.gen_container_finder_sync(), { reset_prompt = true })
         end,
       }
+      dactions.docker_rm:enhance {
+        post = function()
+          action_state.get_current_picker(prompt_bufnr):refresh(dutils.gen_container_finder_sync(), { reset_prompt = true })
+        end,
+      }
       -- Replace enter with nothing for now
       actions.select_default:replace(function() end)
 
       map('i', '<c-s>', dactions.docker_start_toggle)
       map('n', '<c-s>', dactions.docker_start_toggle)
+      map('i', '<c-d>', dactions.docker_rm)
+      map('n', '<c-d>', dactions.docker_rm)
       return true
     end
   }):find()
