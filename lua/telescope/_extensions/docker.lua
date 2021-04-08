@@ -17,11 +17,6 @@ local containers = function(opts)
     sorter = conf.file_sorter(opts),
     previewer = previewers.docker_logs.new(opts),
     attach_mappings = function(prompt_bufnr, map)
-      dactions.docker_start_toggle:enhance {
-        post = function()
-          action_state.get_current_picker(prompt_bufnr):refresh(dutils.gen_container_finder_sync(), { reset_prompt = true })
-        end,
-      }
       dactions.docker_rm:enhance {
         post = function()
           action_state.get_current_picker(prompt_bufnr):refresh(dutils.gen_container_finder_sync(), { reset_prompt = true })
