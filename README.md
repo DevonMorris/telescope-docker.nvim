@@ -27,8 +27,6 @@ require('telescope').extensions.docker.containers
 ```
 
 ## TODO
-* [ ] Containers
-  * [ ] drop to a shell in the container -> `termopen()`
 * [ ] Images
   * [ ] Finder
   * [ ] Entry maker
@@ -50,3 +48,5 @@ require('telescope').extensions.docker.containers
     * [ ] Can I generate vim help pages???
     * [ ] Need a photoshop of whale on telescope
 * [ ] Docker Compose???
+* [ ] Containers
+  * [ ] Arbitrary exec?
