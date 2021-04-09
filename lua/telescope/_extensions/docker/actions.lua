@@ -52,5 +52,13 @@ dactions.docker_rm = function(prompt_bufnr)
   docker_job:start()
 end
 
+dactions.docker_shell = function(prompt_bufnr)
+  local selection = action_state.get_selected_entry()
+  local docker_cmd = 'docker exec -it ' .. selection.name .. ' /bin/bash'
+
+  vim.cmd('term! ' .. docker_cmd)
+  vim.cmd('stopinsert')
+end
+
 dactions = transform_mod(dactions)
 return dactions
