@@ -1,7 +1,5 @@
 # Docker Extension For Telescope
 
-WIP yayayayayayaya
-
 ## Installation
 
 The usual for telescope extensions in packer,
