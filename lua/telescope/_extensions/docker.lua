@@ -21,8 +21,8 @@ local containers = function(opts)
 
       map('i', '<c-s>', dactions.docker_start_toggle)
       map('n', '<c-s>', dactions.docker_start_toggle)
-      map('i', '<c-d>', dactions.docker_rm)
-      map('n', '<c-d>', dactions.docker_rm)
+      map('i', '<c-r>', dactions.docker_rm)
+      map('n', '<c-r>', dactions.docker_rm)
       return true
     end
   }):find()
