@@ -32,6 +32,24 @@ local images = function()
   print("images")
 end
 
+local search = function(opts)
+  local query = opts.query
+  if query == nil then
+    query = vim.fn.input("Search DockerHub for >")
+  end
+  local initial_finder = dutils.gen_search_finder_sync(query)
+  if not initial_finder then return end
+
+  pickers.new(opts, {
+    prompt_title = 'DockerHub Images',
+    finder = initial_finder,
+    sorter = conf.file_sorter(opts),
+    attach_mappings = function(prompt_bufnr, map)
+      return true
+    end
+  }):find()
+end
+
 return require('telescope').register_extension {
   setup = function(ext_config, config)
   end,
@@ -44,5 +62,6 @@ return require('telescope').register_extension {
   exports = {
     containers = containers,
     images = images,
+    search = search,
   }
 }

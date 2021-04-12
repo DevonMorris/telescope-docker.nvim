@@ -72,4 +72,25 @@ dutils.gen_container_finder_sync = function()
   return gen_container_finder_from_results(job:sync())
 end
 
+local get_search_job = function(query)
+  local job = get_job_from_cmd({
+        'docker', 'search', '--limit', '100', '--format',
+        '"{{.Name}}\t{{.Description}}\t{{.StarCount}}"', '--no-trunc', query
+      })
+  return job
+end
+
+local gen_search_finder_from_results = function(results)
+  return finders.new_table {
+    results = results,
+    entry_maker = make_entry.gen_from_search(),
+  }
+end
+dutils.gen_search_finder_from_results = gen_search_finder_from_results
+
+dutils.gen_search_finder_sync = function(query)
+  local job = get_search_job(query)
+  return gen_search_finder_from_results(job:sync())
+end
+
 return dutils

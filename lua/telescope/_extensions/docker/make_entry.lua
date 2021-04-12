@@ -41,4 +41,43 @@ function make_entry.gen_from_containers()
   end
 end
 
+function make_entry.gen_from_search()
+  local display_items = {
+    { width = 30 },       -- Image Name
+    { width = 5 },       -- Star Count
+    { remaining = true}   -- Description
+  }
+
+  local displayer = entry_display.create {
+    separator = " ",
+    items = display_items
+  }
+
+  local make_display = function(entry)
+    return displayer {
+      {entry.image, "TelescopeResultsIdentifier"},
+      entry.stars,
+      entry.description
+    }
+  end
+
+  return function(entry)
+    if entry == "" then
+      return nil
+    end
+
+    local image, description, stars =
+      string.match(entry, '"([^%s]+)%s+([%w%s%p]+)%s+(%d+)"')
+
+    return {
+      value = image,
+      ordinal = image,
+      image = image,
+      description = description,
+      stars = stars,
+      display = make_display
+    }
+  end
+end
+
 return make_entry
