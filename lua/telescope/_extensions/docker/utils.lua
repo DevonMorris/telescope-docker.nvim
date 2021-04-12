@@ -74,8 +74,9 @@ end
 
 local get_search_job = function(query)
   local job = get_job_from_cmd({
-        'docker', 'search', '--limit', '100', '--format',
-        '"{{.Name}}\t{{.Description}}\t{{.StarCount}}"', '--no-trunc', query
+        'docker', 'search', '--limit', '30', '--format',
+        '"{{.Name}}\t{{.Description}}\t{{.StarCount}}\t{{.IsOfficial}}"',
+        '--no-trunc', query
       })
   return job
 end

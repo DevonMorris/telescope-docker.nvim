@@ -45,6 +45,7 @@ function make_entry.gen_from_search()
   local display_items = {
     { width = 30 },       -- Image Name
     { width = 5 },       -- Star Count
+    { width = 3 },       -- Is Official
     { remaining = true}   -- Description
   }
 
@@ -57,6 +58,7 @@ function make_entry.gen_from_search()
     return displayer {
       {entry.image, "TelescopeResultsIdentifier"},
       entry.stars,
+      entry.is_official,
       entry.description
     }
   end
@@ -66,13 +68,20 @@ function make_entry.gen_from_search()
       return nil
     end
 
-    local image, description, stars =
-      string.match(entry, '"([^%s]+)%s+([%w%s%p]+)%s+(%d+)"')
+    local image, description, stars, is_official =
+      string.match(entry, '"([^%s]+)%s+([%w%s%p]+)%s+(%d+)%s+(.*)"')
+
+    if is_official == "[OK]" then
+      is_official = "O"
+    else
+      is_official = "N"
+    end
 
     return {
       value = image,
       ordinal = image,
       image = image,
+      is_official = is_official,
       description = description,
       stars = stars,
       display = make_display
