@@ -41,7 +41,7 @@ dactions.docker_rm = function(prompt_bufnr)
   local docker_job = dutils.get_job_from_cmd({ 'docker', 'rm', '-f', selection.name }, cwd)
   local container_job = dutils.get_container_job()
   container_job:after(vim.schedule_wrap(function(j)
-    results = j:result()
+    local results = j:result()
     local picker = action_state.get_current_picker(prompt_bufnr)
     if picker == nil then
       return
@@ -58,6 +58,17 @@ dactions.docker_shell = function(prompt_bufnr)
 
   vim.cmd('term! ' .. docker_cmd)
   vim.cmd('stopinsert')
+end
+
+dactions.docker_pull = function(prompt_bufnr)
+  local selection = action_state.get_selected_entry()
+  local docker_job = dutils.get_job_from_cmd({ 'docker', 'pull', selection.image }, cwd)
+  docker_job:after(vim.schedule_wrap(function(j)
+    print("YAYAYAYA")
+  end))
+  docker_job:start()
+  local picker = action_state.get_current_picker(prompt_bufnr)
+  picker:close_existing_pickers()
 end
 
 dactions = transform_mod(dactions)

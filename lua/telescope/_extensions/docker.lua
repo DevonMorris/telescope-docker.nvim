@@ -45,6 +45,7 @@ local search = function(opts)
     finder = initial_finder,
     sorter = conf.file_sorter(opts),
     attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(dactions.docker_pull)
       return true
     end
   }):find()
