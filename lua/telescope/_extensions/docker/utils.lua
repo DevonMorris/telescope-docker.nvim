@@ -72,6 +72,27 @@ dutils.gen_container_finder_sync = function()
   return gen_container_finder_from_results(job:sync())
 end
 
+local get_image_job = function()
+  local job = get_job_from_cmd({
+        'docker', 'image', 'ls', '-a', '--format', '"{{.Repository}}\t{{.Tag}}"'
+      })
+  return job
+end
+dutils.get_image_job = get_image_job
+
+local gen_image_finder_from_results = function(results)
+  return finders.new_table {
+    results = results,
+    entry_maker = make_entry.gen_from_image(),
+  }
+end
+dutils.gen_image_finder_from_results = gen_image_finder_from_results
+
+dutils.gen_image_finder_sync = function()
+  local job = get_image_job()
+  return gen_image_finder_from_results(job:sync())
+end
+
 local get_search_job = function(query)
   local job = get_job_from_cmd({
         'docker', 'search', '--limit', '30', '--format',

@@ -28,8 +28,19 @@ local containers = function(opts)
   }):find()
 end
 
-local images = function()
-  print("images")
+local images = function(opts)
+  local initial_finder = dutils.gen_image_finder_sync()
+  if not initial_finder then return end
+
+  pickers.new(opts, {
+    prompt_title = 'Docker Images',
+    finder = initial_finder,
+    sorter = conf.file_sorter(opts),
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function() end)
+      return true
+    end
+  }):find()
 end
 
 local search = function(opts)

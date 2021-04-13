@@ -41,6 +41,48 @@ function make_entry.gen_from_containers()
   end
 end
 
+function make_entry.gen_from_image()
+  local display_items = {
+    { width = 50 },       -- Repository
+    { width = 30 },       -- Tag
+  }
+
+  local displayer = entry_display.create {
+    separator = " ",
+    items = display_items
+  }
+
+  local make_display = function(entry)
+    return displayer {
+      {entry.repository, "TelescopeResultsIdentifier"},
+      entry.tag,
+    }
+  end
+
+  return function(entry)
+    if entry == "" then
+      return nil
+    end
+
+    local repository, tag = string.match(entry, '"([^ ]+)%s+([^ ]+)"')
+
+    if repository == "<none>" then
+      return nil
+    end
+    if tag == "<none>" then
+      return nil
+    end
+
+    return {
+      value = repository,
+      repository = repository,
+      ordinal = repository .. ' ' .. tag,
+      tag = tag,
+      display = make_display
+    }
+  end
+end
+
 function make_entry.gen_from_search()
   local display_items = {
     { width = 30 },       -- Image Name
