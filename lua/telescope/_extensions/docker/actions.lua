@@ -63,8 +63,13 @@ end
 dactions.docker_pull = function(prompt_bufnr)
   local selection = action_state.get_selected_entry()
   local docker_job = dutils.get_job_from_cmd({ 'docker', 'pull', selection.image }, cwd)
-  docker_job:after(vim.schedule_wrap(function(j)
-    print("YAYAYAYA")
+  docker_job:add_on_exit_callback(vim.schedule_wrap(function(j, code, signal)
+    -- something goes here
+    if code ~= 0 then
+      print("Failed to pull " .. selection.image)
+    else
+      print("Successfully pulled " .. selection.image)
+    end
   end))
   docker_job:start()
   local picker = action_state.get_current_picker(prompt_bufnr)
