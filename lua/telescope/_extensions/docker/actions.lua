@@ -76,5 +76,16 @@ dactions.docker_pull = function(prompt_bufnr)
   picker:close_existing_pickers()
 end
 
+dactions.docker_run = function(prompt_bufnr)
+  local selection = action_state.get_selected_entry()
+  -- command flags????
+  local flags = vim.fn.input("Flags > ")
+  local command = vim.fn.input("Command > ")
+  local docker_cmd = 'docker run ' .. flags .. ' ' .. selection.repository .. ":" .. selection.tag .. ' ' .. command
+  -- Check flags for interactive and tty
+  vim.cmd('term! ' .. docker_cmd)
+  vim.cmd('stopinsert')
+end
+
 dactions = transform_mod(dactions)
 return dactions
