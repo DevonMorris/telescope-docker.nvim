@@ -78,13 +78,27 @@ end
 
 dactions.docker_run = function(prompt_bufnr)
   local selection = action_state.get_selected_entry()
-  -- command flags????
+  -- TODO: command flags????
   local flags = vim.fn.input("Flags > ")
   local command = vim.fn.input("Command > ")
   local docker_cmd = 'docker run ' .. flags .. ' ' .. selection.repository .. ":" .. selection.tag .. ' ' .. command
-  -- Check flags for interactive and tty
+  -- TODO: Check flags for interactive and tty
   vim.cmd('term! ' .. docker_cmd)
   vim.cmd('stopinsert')
+end
+
+dactions.docker_rmi = function(prompt_bufnr)
+  local cwd = action_state.get_current_picker(prompt_bufnr).cwd
+  local selection = action_state.get_selected_entry()
+
+  local docker_job = dutils.get_job_from_cmd({ 'docker', 'rmi', selection.repository .. ":" .. selection.tag }, cwd)
+  docker_job:add_on_exit_callback(vim.schedule_wrap(function(j, code, signal)
+    if code ~= 0 then
+      -- TODO: Make this more precise
+      print("Failed to remove image " .. selection.repository .. ":" .. selection.tag)
+    end
+  end))
+  docker_job:sync()
 end
 
 dactions = transform_mod(dactions)

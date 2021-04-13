@@ -19,6 +19,7 @@ local containers = function(opts)
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(dactions.docker_shell)
 
+      -- TODO make these customizable
       map('i', '<c-s>', dactions.docker_start_toggle)
       map('n', '<c-s>', dactions.docker_start_toggle)
       map('i', '<c-r>', dactions.docker_rm)
@@ -38,6 +39,13 @@ local images = function(opts)
     sorter = conf.file_sorter(opts),
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(dactions.docker_run)
+      dactions.docker_rmi:enhance {
+        post = function()
+          action_state.get_current_picker(prompt_bufnr):refresh(dutils.gen_image_finder_sync(), { reset_prompt = true })
+        end,
+      }
+      map('i', '<c-r>', dactions.docker_rmi)
+      map('n', '<c-r>', dactions.docker_rmi)
       return true
     end
   }):find()

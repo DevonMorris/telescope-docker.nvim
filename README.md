@@ -26,13 +26,9 @@ require('telescope').extensions.docker.containers
 
 ## TODO
 * [ ] Images
-  * [ ] Finder
-  * [ ] Entry maker
   * [ ] What should I even make the previewer here???
   * [ ] `rmi`
   * [ ] `docker run`
-  * [ ] `docker start`
-  * [ ] open a shell?
   * [ ] How do I handle all the config stuff?
     * [ ] like `-v`, `--rm` basically everything under `docker run --help`
 * [ ] Clean Up
