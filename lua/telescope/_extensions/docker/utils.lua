@@ -51,13 +51,13 @@ local get_job_from_cmd = function(cmd, cwd)
 end
 dutils.get_job_from_cmd = get_job_from_cmd
 
-local gen_container_finder_from_results = function(results)
+local gen_finder_from_results = function(results, entry_maker)
   return finders.new_table {
     results = results,
-    entry_maker = make_entry.gen_from_containers(),
+    entry_maker = entry_maker
   }
 end
-dutils.gen_container_finder_from_results = gen_container_finder_from_results
+dutils.gen_finder_from_results = gen_finder_from_results
 
 local get_container_job = function()
   local job = get_job_from_cmd({
@@ -69,7 +69,7 @@ dutils.get_container_job = get_container_job
 
 dutils.gen_container_finder_sync = function()
   local job = get_container_job()
-  return gen_container_finder_from_results(job:sync())
+  return gen_finder_from_results(job:sync(), make_entry.gen_from_containers())
 end
 
 local get_image_job = function()
@@ -80,17 +80,9 @@ local get_image_job = function()
 end
 dutils.get_image_job = get_image_job
 
-local gen_image_finder_from_results = function(results)
-  return finders.new_table {
-    results = results,
-    entry_maker = make_entry.gen_from_image(),
-  }
-end
-dutils.gen_image_finder_from_results = gen_image_finder_from_results
-
 dutils.gen_image_finder_sync = function()
   local job = get_image_job()
-  return gen_image_finder_from_results(job:sync())
+  return gen_finder_from_results(job:sync(), make_entry.gen_from_image())
 end
 
 local get_search_job = function(query)
@@ -102,17 +94,9 @@ local get_search_job = function(query)
   return job
 end
 
-local gen_search_finder_from_results = function(results)
-  return finders.new_table {
-    results = results,
-    entry_maker = make_entry.gen_from_search(),
-  }
-end
-dutils.gen_search_finder_from_results = gen_search_finder_from_results
-
 dutils.gen_search_finder_sync = function(query)
   local job = get_search_job(query)
-  return gen_search_finder_from_results(job:sync())
+  return gen_finder_from_results(job:sync(), make_entry.gen_from_search())
 end
 
 return dutils

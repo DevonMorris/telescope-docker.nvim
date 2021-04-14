@@ -1,6 +1,7 @@
 local action_state = require('telescope.actions.state')
 local utils = require('telescope.utils')
 local dutils = require('telescope._extensions.docker.utils')
+local make_entry = require('telescope._extensions.docker.make_entry')
 local transform_mod = require('telescope.actions.mt').transform_mod
 local dactions = {}
 
@@ -24,7 +25,8 @@ dactions.docker_start_toggle = function(prompt_bufnr)
     if picker == nil then
       return
     end
-    picker:refresh(dutils.gen_container_finder_from_results(results), { reset_prompt = false })
+    picker:refresh(dutils.gen_finder_from_results(results,
+      make_entry.gen_from_containers()), { reset_prompt = false })
   end))
   docker_job:and_then(container_job)
   docker_job:start()
@@ -46,7 +48,8 @@ dactions.docker_rm = function(prompt_bufnr)
     if picker == nil then
       return
     end
-    picker:refresh(dutils.gen_container_finder_from_results(results), { reset_prompt = false })
+    picker:refresh(dutils.gen_finder_from_results(results,
+      make_entry.gen_from_containers()), { reset_prompt = false })
   end))
   docker_job:and_then(container_job)
   docker_job:start()
